@@ -1,0 +1,62 @@
+# Default values for promxy.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: alterway/promxy
+  pullPolicy: Always
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8082
+
+ingress:
+  enabled: false
+
+resources: {}
+  # limits:
+  #   cpu: 1
+  #   memory: 4096Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 9
+  targetCPUUtilizationPercentage: 70
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+promxy:
+
+  global:
+    evaluationInterval: 5s
+    label: promxy
+
+  serverGroup: group1
+
+  antiAffinity: 10s
+
+  ignoreError: true
+
+  prometheus:
+    targets: prom-prometheus-operator-prometheus:9090
