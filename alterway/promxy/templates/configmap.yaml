@@ -18,12 +18,12 @@ data:
     remote_write:
       - url: http://localhost:8083/receive
 
-
     promxy:
       server_groups:
         - static_configs:
             - targets:
-              - {{ .Values.promxy.prometheus.targets }}
+              {{- range .Values.promxy.prometheus.targets }}
+              {{"-"}}{{. | indent 1 }}{{- end }}
           labels:
             sg: {{ .Values.promxy.serverGroup }}
           anti_affinity: {{ .Values.promxy.antiAffinity }}
