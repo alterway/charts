@@ -26,9 +26,8 @@ promxy:
   ignoreError: true
 
   prometheus:
-    targets:
-    - promlabdoc-prometheus-oper-prometheus.doc.svc.cluster.local:9090
-    - promlab-prometheus-operato-prometheus.monitoring.svc.cluster.local:9090
+    targets: 
+      - prom-prometheus-operator-prometheus:9090
 
 serviceAccount:
   create: true
