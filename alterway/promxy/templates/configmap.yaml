@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+data:
+  config.yaml: |+
+    ##
+    global:
+      evaluation_interval: {{ .Values.promxy.global.evaluationInterval }}
+      external_labels:
+        source: {{ .Values.promxy.global.label }}
+
+    # Rule files specifies a list of globs. Rules and alerts are read from
+    # all matching files.
+    rule_files:
+    - "*rule"
+
+    remote_write:
+      - url: http://localhost:8083/receive
+
+    promxy:
+      server_groups:
+        - static_configs:
+            - targets:
+              {{- range .Values.promxy.prometheus.targets }}
+              {{"-"}}{{. | indent 1 }}{{- end }}
+          labels:
+            sg: {{ .Values.promxy.serverGroup }}
+          anti_affinity: {{ .Values.promxy.antiAffinity }}
+          http_client:
+            tls_config:
+              insecure_skip_verify: true
+          # ignore_error will make the given security group's response "optional"
+          # meaning if this servergroup returns and error and others don't the overall
+          # query can still succeed
+          ignore_error: {{ .Values.promxy.ignoreError }}
+
